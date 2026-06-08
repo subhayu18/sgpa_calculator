@@ -3,427 +3,257 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SGPA Calculator</title>
-
+<title>Advanced SGPA Portal</title>
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:"Segoe UI",sans-serif;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
 body{
-    min-height:100vh;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:30px;
-    color:white;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+min-height:100vh;padding:30px;color:#fff;
 }
-
 .container{
-    width:90%;
-    max-width:900px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(18px);
-    border-radius:20px;
-    padding:40px;
-    box-shadow:0 25px 60px rgba(0,0,0,0.35);
+max-width:1000px;margin:auto;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+padding:35px;border-radius:22px;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
-
-h1{
-    text-align:center;
-    font-size:3rem;
-    margin-bottom:10px;
+h1{text-align:center;font-size:3rem}
+.subtitle{text-align:center;opacity:.8;margin-bottom:25px}
+.student-info,.header-row,.input-row{
+display:grid;grid-template-columns:2fr 1fr;
+gap:15px;
 }
-
-.subtitle{
-    text-align:center;
-    opacity:0.8;
-    margin-bottom:30px;
+.header-row2,.input-row-sub{
+display:grid;grid-template-columns:2fr 1fr 1fr;
+gap:15px;
 }
-
-.student-info{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-bottom:25px;
-}
-
-.header-row{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr;
-    gap:15px;
-    margin-bottom:10px;
-    font-weight:600;
-    opacity:0.9;
-}
-
-.input-row{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr;
-    gap:15px;
-    margin-bottom:15px;
-}
-
+.student-info{margin-bottom:25px}
+.header-row2{margin-bottom:10px;font-weight:600}
+.input-row-sub{margin-bottom:12px}
 input,select{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    outline:none;
-    background:rgba(255,255,255,0.15);
-    color:white;
-    font-size:0.95rem;
+padding:14px;border:none;border-radius:10px;
+background:rgba(255,255,255,.15);
+color:white;width:100%;
 }
-
-input::placeholder{
-    color:rgba(255,255,255,0.65);
-}
-
-select option{
-    color:black;
-}
-
-.buttons{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    margin-top:25px;
-}
-
+select option{color:black}
+.buttons{text-align:center;margin-top:20px}
 button{
-    border:none;
-    border-radius:30px;
-    padding:14px 30px;
-    font-size:1rem;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.25s;
+padding:14px 28px;border:none;border-radius:30px;
+font-weight:700;cursor:pointer;margin:5px;
 }
-
-button:hover{
-    transform:translateY(-2px);
-}
-
-.add-btn{
-    background:linear-gradient(135deg,#00c6ff,#0072ff);
-    color:white;
-}
-
-.calc-btn{
-    background:linear-gradient(135deg,#f7971e,#ffd200);
-    color:black;
-}
-
+.add{background:#0ea5e9;color:white}
+.calc{background:#facc15}
 .overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(8px);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    opacity:0;
-    pointer-events:none;
-    transition:0.4s;
+position:fixed;inset:0;
+background:rgba(0,0,0,.65);
+display:none;justify-content:center;align-items:center;
+padding:20px;
 }
-
-.overlay.active{
-    opacity:1;
-    pointer-events:auto;
-}
-
 .popup{
-    width:90%;
-    max-width:500px;
-    background:rgba(255,255,255,0.12);
-    backdrop-filter:blur(20px);
-    border-radius:20px;
-    padding:35px;
-    text-align:center;
-    transform:scale(0.85);
-    transition:0.4s;
+width:min(900px,95vw);
+max-height:90vh;
+overflow:auto;
+background:#101827;
+padding:30px;border-radius:20px;
 }
-
-.overlay.active .popup{
-    transform:scale(1);
+.label{color:#60a5fa;font-weight:700}
+.sgpa{
+font-size:4rem;font-weight:900;text-align:center;margin:10px 0;
 }
-
-.result-name{
-    font-size:1.7rem;
-    margin-bottom:10px;
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;margin:20px 0;
 }
-
-.sgpa-value{
-    font-size:3rem;
-    font-weight:bold;
-    color:#ffd54f;
-    margin:15px 0;
+.card{
+background:rgba(255,255,255,.08);
+padding:15px;border-radius:12px;text-align:center;
 }
-
-.result-details{
-    line-height:1.9;
-    font-size:1rem;
+table{
+width:100%;border-collapse:collapse;margin-top:15px;
 }
-
+th,td{
+padding:10px;border:1px solid rgba(255,255,255,.15);
+text-align:center;
+}
 .badge{
-    display:inline-block;
-    margin-top:15px;
-    padding:10px 20px;
-    border-radius:25px;
-    background:rgba(255,255,255,0.15);
-    font-weight:600;
+display:inline-block;padding:10px 20px;border-radius:20px;
+margin-top:15px;font-weight:700;
 }
-
-.close-btn{
-    margin-top:25px;
-    background:linear-gradient(135deg,#ff416c,#ff4b2b);
-    color:white;
-}
-
+.actions{text-align:center;margin-top:20px}
 @media(max-width:700px){
-
-.student-info,
-.header-row,
-.input-row{
-    grid-template-columns:1fr;
+.student-info,.header-row2,.input-row-sub{grid-template-columns:1fr}
 }
-
-}
-
 </style>
 </head>
 <body>
 
-<div class="container" id="mainContent">
-
+<div class="container">
 <h1>SGPA Calculator</h1>
 <div class="subtitle">Developed by Subhayu</div>
 
 <div class="student-info">
-    <input type="text" id="studentName" placeholder="Enter Student Name">
-
-    <select id="semester">
-        <option value="">Select Semester</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        <option>7</option>
-        <option>8</option>
-    </select>
+<input id="name" placeholder="Student Name">
+<select id="sem">
+<option value="">Select Semester</option>
+<option>1</option><option>2</option><option>3</option><option>4</option>
+<option>5</option><option>6</option><option>7</option><option>8</option>
+</select>
 </div>
 
-<div class="header-row">
-    <div>Subject Name</div>
-    <div>Credits</div>
-    <div>Grade</div>
+<div class="header-row2">
+<div>Subject</div><div>Credits</div><div>Grade</div>
 </div>
 
-<div id="inputs">
-
-    <div class="input-row">
-        <input type="text" placeholder="Enter Subject Name">
-
-        <input type="number" placeholder="Credits" min="0">
-
-        <select>
-            <option value="">Select Grade</option>
-            <option value="10">A+ (10)</option>
-            <option value="9">A (9)</option>
-            <option value="8">B+ (8)</option>
-            <option value="7">B (7)</option>
-            <option value="6">C+ (6)</option>
-            <option value="5">C (5)</option>
-            <option value="4">D (4)</option>
-            <option value="0">E</option>
-            <option value="0">F</option>
-            <option value="0">I</option>
-        </select>
-    </div>
-
-</div>
+<div id="inputs"></div>
 
 <div class="buttons">
-    <button class="add-btn" onclick="addRow()">Add Subject</button>
-    <button class="calc-btn" onclick="calculateSGPA()">Calculate SGPA</button>
+<button class="add" onclick="addRow()">Add Subject</button>
+<button class="calc" onclick="calculate()">Calculate SGPA</button>
 </div>
-
 </div>
 
 <div class="overlay" id="overlay">
-
 <div class="popup">
 
-<div class="result-name" id="resultName"></div>
+<h2 style="text-align:center">Semester Result Report</h2>
 
-<div class="sgpa-value" id="sgpaValue"></div>
+<p><span class="label">Name :</span> <span id="rName"></span></p>
+<p><span class="label">Semester :</span> <span id="rSem"></span></p>
+<p><span class="label">Generated :</span> <span id="rDate"></span></p>
 
-<div class="result-details" id="resultDetails"></div>
+<div class="sgpa" id="sgpa">0.00</div>
 
-<div class="badge" id="performanceBadge"></div>
-
-<button class="close-btn" onclick="closePopup()">
-Close
-</button>
-
+<div style="text-align:center">
+<span class="badge" id="badge"></span>
 </div>
 
+<div class="stats">
+<div class="card"><h3>Total Credits</h3><p id="credits"></p></div>
+<div class="card"><h3>Grade Points</h3><p id="points"></p></div>
+<div class="card"><h3>Best Subjects</h3><p id="best"></p></div>
+<div class="card"><h3>Failed Subjects</h3><p id="failed"></p></div>
+</div>
+
+<h3>Subject-wise Performance</h3>
+<table>
+<thead>
+<tr><th>Subject</th><th>Credits</th><th>Grade</th></tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+
+<div style="margin-top:20px;text-align:center;font-size:1.1rem" id="message"></div>
+
+<div class="actions">
+<button onclick="window.print()">Download Report PDF</button>
+<button onclick="closePopup()">Close</button>
+</div>
+
+</div>
 </div>
 
 <script>
-
 function addRow(){
+const div=document.createElement('div');
+div.className='input-row-sub';
+div.innerHTML=`
+<input placeholder="Subject Name">
+<input type="number" min="0" placeholder="Credits">
+<select>
+<option value="">Grade</option>
+<option value="10">A+ (10)</option>
+<option value="9">A (9)</option>
+<option value="8">B+ (8)</option>
+<option value="7">B (7)</option>
+<option value="6">C+ (6)</option>
+<option value="5">C (5)</option>
+<option value="4">D (4)</option>
+<option value="0">E/F/I</option>
+</select>`;
+document.getElementById('inputs').appendChild(div);
+}
+addRow();
 
-    const row=document.createElement("div");
+function calculate(){
+const name=document.getElementById('name').value.trim();
+const sem=document.getElementById('sem').value;
 
-    row.className="input-row";
+if(!name||!sem){alert("Enter Name and Semester");return;}
 
-    row.innerHTML=`
+let credits=0,points=0,maxGrade=-1;
+let best=[],failed=[];
+let rows=document.querySelectorAll('.input-row-sub');
+let tbody='';
 
-    <input type="text" placeholder="Enter Subject Name">
+rows.forEach(r=>{
+const subject=r.children[0].value||"Unnamed Subject";
+const c=parseFloat(r.children[1].value);
+const g=parseFloat(r.children[2].value);
 
-    <input type="number" placeholder="Credits" min="0">
+if(!isNaN(c)&&!isNaN(g)){
+credits+=c;
+points+=c*g;
 
-    <select>
-        <option value="">Select Grade</option>
-        <option value="10">A+ (10)</option>
-        <option value="9">A (9)</option>
-        <option value="8">B+ (8)</option>
-        <option value="7">B (7)</option>
-        <option value="6">C+ (6)</option>
-        <option value="5">C (5)</option>
-        <option value="4">D (4)</option>
-        <option value="0">E</option>
-        <option value="0">F</option>
-        <option value="0">I</option>
-    </select>
+tbody+=`<tr><td>${subject}</td><td>${c}</td><td>${g}</td></tr>`;
 
-    `;
+if(g>maxGrade){maxGrade=g;best=[subject];}
+else if(g===maxGrade){best.push(subject);}
 
-    document.getElementById("inputs").appendChild(row);
+if(g===0)failed.push(subject);
+}
+});
+
+if(credits===0){alert("Enter valid data");return;}
+
+const sg=(points/credits).toFixed(2);
+
+let performance,msg,color;
+
+if(sg>=9){
+performance="Outstanding 🌟";
+msg="Exceptional semester performance. Dean's List territory!";
+color="#facc15";
+}
+else if(sg>=8){
+performance="Excellent 🎉";
+msg="Strong academic performance. Keep pushing!";
+color="#60a5fa";
+}
+else if(sg>=7){
+performance="Very Good 👍";
+msg="Consistent work paying off nicely.";
+color="#22c55e";
+}
+else{
+performance="Needs Improvement";
+msg="A stronger next semester can lift your CGPA significantly.";
+color="#fb923c";
 }
 
-function calculateSGPA(){
+document.getElementById('rName').textContent=name;
+document.getElementById('rSem').textContent=sem;
+document.getElementById('rDate').textContent=new Date().toLocaleString();
 
-    const name=document.getElementById("studentName").value.trim();
+document.getElementById('sgpa').textContent=sg;
+document.getElementById('sgpa').style.color=color;
 
-    const semester=document.getElementById("semester").value;
+document.getElementById('badge').textContent=performance;
+document.getElementById('badge').style.background=color;
 
-    if(!name || !semester){
-        alert("Please enter Student Name and Semester.");
-        return;
-    }
+document.getElementById('credits').textContent=credits;
+document.getElementById('points').textContent=points.toFixed(0);
+document.getElementById('best').textContent=best.join(", ");
+document.getElementById('failed').textContent=failed.length?failed.join(", "):"None 🎯";
+document.getElementById('tableBody').innerHTML=tbody;
+document.getElementById('message').textContent=msg;
 
-    const rows=document.querySelectorAll(".input-row");
-
-    let totalCredits=0;
-    let weightedSum=0;
-
-    let highestGrade=-1;
-    let bestSubjects=[];
-
-    let failedSubjects=[];
-
-    rows.forEach(row=>{
-
-        const subject=row.children[0].value.trim() || "Unnamed Subject";
-
-        const credit=parseFloat(row.children[1].value);
-
-        const grade=parseFloat(row.children[2].value);
-
-        if(!isNaN(credit) && !isNaN(grade)){
-
-            totalCredits+=credit;
-            weightedSum+=credit*grade;
-
-            if(grade>highestGrade){
-                highestGrade=grade;
-                bestSubjects=[subject];
-            }
-            else if(grade===highestGrade){
-                bestSubjects.push(subject);
-            }
-
-            if(grade===0){
-                failedSubjects.push(subject);
-            }
-        }
-
-    });
-
-    if(totalCredits===0){
-        alert("Please enter valid subject details.");
-        return;
-    }
-
-    const sgpa=(weightedSum/totalCredits).toFixed(2);
-
-    let performance="";
-
-    if(sgpa>=9)
-        performance="Outstanding 🌟";
-    else if(sgpa>=8)
-        performance="Excellent 🎉";
-    else if(sgpa>=7)
-        performance="Very Good 👍";
-    else if(sgpa>=6)
-        performance="Good";
-    else
-        performance="Needs Improvement";
-
-    document.getElementById("resultName").innerHTML=
-        `${name}<br>Semester ${semester}`;
-
-    document.getElementById("sgpaValue").textContent=sgpa;
-
-    document.getElementById("resultDetails").innerHTML=
-    `
-    <strong>Total Credits:</strong> ${totalCredits}<br>
-
-    <strong>Total Grade Points:</strong>
-    ${weightedSum.toFixed(0)}<br><br>
-
-    <strong>Best Subject(s):</strong><br>
-    ${bestSubjects.join(", ")}<br><br>
-
-    ${
-        failedSubjects.length
-        ?
-        `<strong>Failed Subject(s):</strong><br>
-        ${failedSubjects.join(", ")}`
-        :
-        `<strong>No Backlogs 🎯</strong>`
-    }
-    `;
-
-    document.getElementById("performanceBadge").textContent=
-        performance;
-
-    document.getElementById("overlay")
-        .classList.add("active");
-
-    document.getElementById("mainContent")
-        .style.filter="blur(6px)";
+document.getElementById('overlay').style.display='flex';
 }
 
 function closePopup(){
-
-    document.getElementById("overlay")
-        .classList.remove("active");
-
-    document.getElementById("mainContent")
-        .style.filter="none";
+document.getElementById('overlay').style.display='none';
 }
-
 </script>
-
 </body>
 </html>
